@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>单页面应用</title>
+    <style>
+        body {
+            padding: 0;
+            margin:0;
+        }
+        ol {
+            min-height: 400px;
+            padding-top: 0;
+            margin: 0;
+            border: 1px solid #ccc;
+        }
+        .music {
+            margin: 80px auto;
+            width: 600px;
+        }
+        .music nav {
+            height: 40px;
+            background: #000;
+            display: flex;
+            padding-left: 50px;
+        }
+        nav a {
+            text-decoration: none;
+            color: #fff;
+            line-height: 40px;
+            font: 15px;
+            flex: 1;
+        }
+        ol li {
+            line-height: 40px;
+        }
+        ol li:hover {
+            background-color: #ccc;
+        }
+
+
+    </style>
+</head>
+<body ng-app="Music">
+<div class="music">
+    <nav>
+        <!-- 后端会说明需要什么样参数 -->
+        <!-- 需要一个类型ID 1，2，3，4 -->
+        <!-- 1表示流行 2表示华语 3表示欧美 4表示日韩 -->
+        <!--angular要求锚点带斜杠-->
+        <a href="#/1">流行</a>
+        <a href="#/2">华语</a>
+        <a href="#/3">欧美</a>
+        <a href="#/4">日韩</a>
+    </nav>
+    <ol>
+        <div ng-view></div>
+    </ol>
+</div>
+    <script src="../angularJS/angular.min.js"></script>
+    <script src="../angularJS/angular-route.js"></script>
+    <script>
+        var Music = angular.module('Music',['ngRoute']);
+        Music.config(['$routeProvider', function ($routeProvider) {
+            $routeProvider.when('/:id',{
+                templateUrl:'views/list.html',
+                controller:'MusicController'
+            }).otherwise({
+                redirectTo:'/1'
+            })
+        }])
+        Music.controller('MusicController',['$scope','$http','$routeParams', function ($scope,$http,$routeParams) {
+            var id = $routeParams.id;
+            $http({
+                url:'api/list.php',
+                method:'get',
+                params:{
+                    type:id
+                }
+            }).success(function (info) {
+                console.log(info);
+                $scope.lists = info;
+            })
+        }])
+
+
+//        var Music = angular.module('Music',['ngRoute']);
+//        Music.config(['$routeProvider', function ($routeProvider) {
+//            $routeProvider.when('/:id',{
+//                templateUrl:'views/list.html',
+//                controller:'MusicController'
+//            }).otherwise({
+//                redirectTo:'/1'
+//            })
+//        }])
+//        Music.controller('MusicController',['$scope','$http','$routeParams', function ($scope,$http,$routeParams) {
+//            var id = $routeParams.id;
+//            $http({
+//                url:'api/list.php',
+//                method:'get',
+//                params:{
+//                    type:id
+//                }
+//            }).success(function (info) {
+//                console.log(info);
+//                $scope.lists = info;
+//            })
+//        }])
+//        var Music = angular.module('Music',['ngRoute']);
+//        //要用他必须先初始化
+//        Music.config(['$routeProvider',function ($routeProvider) {
+//            $routeProvider.when('/:id',{
+//                templateUrl:'views/list.html',
+//                controller:'MusicController'
+//            }).otherwise({
+//                redirectTo:'/1'
+//            })
+//        }])
+//
+//        Music.controller('MusicController',['$scope','$http','$routeParams', function ($scope,$http,$routeParams) {
+//            var id = $routeParams.id;
+//            $http({
+//                url:'api/list.php',
+//                method:'get',
+//                params:{
+//                    type: id
+//                    //对象里面根本不需要分号
+//                }
+//            }).success(function (info) {
+//                console.log(info);
+//                $scope.lists = info;
+//            })
+//
+//        }])
+
+
+//        var Music = angular.module('Music', ['ngRoute']);
+//        //
+//        Music.config(['$routeProvider', function ($routeProvider) {
+//
+//            $routeProvider.when('/:id', {
+//                templateUrl: './views/list.html',
+//                controller: 'ListController'
+//            }).otherwise({
+//                redirectTo: '/1'
+//            });
+//
+//        }]);
+//
+//        Music.controller('ListController', ['$scope', '$http', '$routeParams',function ($scope, $http, $routeParams) {
+//            // 获取地址上参数
+//            var id = $routeParams.id;
+//            $http({
+//                url: './api/list.php',
+//                method: 'get',
+//                params: {type: id} // 将获取到的参数传给后端
+//            }).success(function (info) {
+//                console.log(info);
+//
+//                $scope.lists = info;
+//            });
+//        }]);
+    </script>
+
+
+</body>
+</html>
